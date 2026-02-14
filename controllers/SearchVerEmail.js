@@ -79,13 +79,16 @@ export const searchBySelfieandEmail = async (req, res) => {
         // Extract S3 key from full URL
         const key = img.image_url.split(".amazonaws.com/")[1];
 
-        const command = new GetObjectCommand({
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Key: key
-        });
+       const command = new GetObjectCommand({
+  Bucket: process.env.AWS_BUCKET_NAME,
+  Key: key,
+  ResponseContentDisposition: "attachment",
+  ResponseContentType: "image/jpeg"
+});
+
 
         const signedUrl = await getSignedUrl(s3, command, {
-          expiresIn: 60 // 1 minute
+          expiresIn: 900 // 1 minute
         });
 
         return {

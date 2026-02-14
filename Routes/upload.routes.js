@@ -2,6 +2,7 @@ import express from "express";
 import { deleteEventImage, getImagesCount, uploadEventImages } from "../controllers/upload.controller.js";
 import { verifyAdmin } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { downloadAllPhotosZip } from "../services/Archiver.service.js";
 
 const router = express.Router();
 
@@ -25,5 +26,7 @@ router.get(
   verifyAdmin,
   getImagesCount
 );
+
+router.post("/download-zip",downloadAllPhotosZip)
 
 export default router;
