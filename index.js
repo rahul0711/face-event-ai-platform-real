@@ -35,9 +35,9 @@ dotenv.config({
 import adminRoutes from "./routes/admin.routes.js";
 import eventRoutes from "./routes/event.routes.js";
 
-import searchRoutes from "./routes/search.routes.js";
+// import searchRoutes from "./routes/search.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
-import SearchEmail from "./Routes/search.routesEmail.js"
+import SearchEmail from "./Routes/search.routes.js"
 // import googleupload from "./Routes/googleupload.routes.js"
 import UserHistory from  "./Routes/userAnalytics.routes.js"
 
@@ -45,7 +45,7 @@ import UserHistory from  "./Routes/userAnalytics.routes.js"
 app.use("/api/admin", adminRoutes);
 app.use("/api/event", eventRoutes);
 
-app.use("/api/search", searchRoutes);
+// app.use("/api/search", searchRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/email", SearchEmail);
 app.use("/api/history", UserHistory);
