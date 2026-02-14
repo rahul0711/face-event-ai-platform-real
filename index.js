@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
 import cors from 'cors'
-import cookieParser from "cookie-parser";
+
 import { checkDBConnection } from "./database/db.js";
 
 const app = express()
@@ -9,7 +9,7 @@ const app = express()
 app.use(express.json({limit: "500mb"}))
 app.use(express.urlencoded({extended: true, limit: "500mb"}))
 app.use(express.static("public"))
-app.use(cookieParser()) 
+
 
 
 checkDBConnection()

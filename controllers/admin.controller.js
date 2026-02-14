@@ -38,29 +38,45 @@ export const registerAdmin = async (req, res) => {
 
 /* LOGIN ADMIN */
 export const loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const [rows] = await db.query(
-    "SELECT * FROM admins WHERE email=?",
-    [email]
-  );
+    const [rows] = await db.query(
+      "SELECT * FROM admins WHERE email=?",
+      [email]
+    );
 
-  if (!rows.length)
-    return res.status(404).json({ message: "Admin not found" });
+    if (!rows.length)
+      return res.status(404).json({ message: "Admin not found" });
 
-  const admin = rows[0];
+    const admin = rows[0];
 
-  const valid = await bcrypt.compare(password, admin.password);
+    const valid = await bcrypt.compare(password, admin.password);
 
-  if (!valid)
-    return res.status(401).json({ message: "Invalid password" });
+    if (!valid)
+      return res.status(401).json({ message: "Invalid password" });
 
-  const token = jwt.sign(
-    { id: admin.admin_id },
-    process.env.JWT_SECRET
-  );
+    const token = jwt.sign(
+      { id: admin.admin_id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-  res.cookie("token", token).json({ message: "Login success" });
+    // 🔥 RETURN TOKEN IN RESPONSE (NO COOKIE)
+    res.status(200).json({
+      message: "Login success",
+      token,
+      admin: {
+        id: admin.admin_id,
+        email: admin.email,
+        name: admin.name
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Login failed" });
+  }
 };
 
 
