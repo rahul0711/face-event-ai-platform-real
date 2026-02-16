@@ -2,7 +2,7 @@ import express from "express";
 import { deleteEventImage, getImagesCount, uploadEventImages } from "../controllers/upload.controller.js";
 import { verifyAdmin } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { downloadAllPhotosZip } from "../services/Archiver.service.js";
+import { downloadAllPhotosZip, downloadSinglePhoto } from "../services/Archiver.service.js";
 
 const router = express.Router();
 
@@ -28,5 +28,6 @@ router.get(
 );
 
 router.post("/download-zip",downloadAllPhotosZip)
+router.post("/download-single", downloadSinglePhoto);
 
 export default router;

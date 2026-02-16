@@ -23,3 +23,31 @@ export const downloadAllPhotosZip = async (req, res) => {
 
   await archive.finalize();
 };
+
+
+export const downloadSinglePhoto = async (req, res) => {
+  try {
+    const { key } = req.body; // single S3 key
+
+    if (!key) {
+      return res.status(400).json({ error: "Image key required" });
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: key,
+      ResponseContentDisposition: "attachment",
+      ResponseContentType: "image/jpeg"
+    });
+
+    const signedUrl = await getSignedUrl(s3, command, {
+      expiresIn: 900
+    });
+
+    res.json({ downloadUrl: signedUrl });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Download failed" });
+  }
+};
