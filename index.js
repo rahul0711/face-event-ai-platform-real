@@ -17,7 +17,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://demo.scriptindia.in:8021"
+      "https://demo.scriptindia.in:8021",
+      "https://eventphotos.scriptindia.in/"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
