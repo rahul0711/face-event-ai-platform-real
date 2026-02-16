@@ -14,15 +14,17 @@ app.use(express.static("public"))
 
 checkDBConnection()
 app.use(
-   cors({
-    origin: "http://localhost:5173",
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://demo.scriptindia.in:8021"
+    ],
     credentials: true,
-  
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
   })
 );
+
 
 app.use(express.json())
 app.use((req, res, next) => {
