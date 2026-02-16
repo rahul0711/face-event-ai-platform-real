@@ -6,6 +6,17 @@ import { checkDBConnection } from "./database/db.js";
 
 const app = express()
 
+app.use(
+  cors({
+    origin: 
+      
+      "https://eventphotos.scriptindia.in"
+  ,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json({limit: "500mb"}))
 app.use(express.urlencoded({extended: true, limit: "500mb"}))
 app.use(express.static("public"))
@@ -13,18 +24,6 @@ app.use(express.static("public"))
 
 
 checkDBConnection()
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://demo.scriptindia.in:8021",
-      "https://eventphotos.scriptindia.in"
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
 
 
 
