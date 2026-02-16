@@ -1,6 +1,8 @@
 import archiver from "archiver";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"; // 👈 ADD THIS
 import { s3 } from "./awsS3.service.js";
+
 
 export const downloadAllPhotosZip = async (req, res) => {
   const { keys } = req.body; // array of S3 keys
