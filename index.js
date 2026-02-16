@@ -1,68 +1,70 @@
 import express from "express";
-import dotenv from 'dotenv'
-import cors from 'cors'
+import dotenv from "dotenv";
+import cors from "cors";
 
 import { checkDBConnection } from "./database/db.js";
 
-const app = express()
-
-app.use(
-  cors({
-    origin: 
-      
-      "https://eventphotos.scriptindia.in"
-  ,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-app.use(express.json({limit: "500mb"}))
-app.use(express.urlencoded({extended: true, limit: "500mb"}))
-app.use(express.static("public"))
-
-
-
-checkDBConnection()
-
-
-
-app.use(express.json())
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Headers", "*");
-    next();
-});
-dotenv.config({
-  path: './.env'
-});
-
-
 import adminRoutes from "./routes/admin.routes.js";
 import eventRoutes from "./routes/event.routes.js";
-
-// import searchRoutes from "./routes/search.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
-import SearchEmail from "./routes/search.routes.js"
-// import googleupload from "./Routes/googleupload.routes.js"
-import UserHistory from  "./routes/userAnalytics.routes.js"
+import SearchEmail from "./routes/search.routes.js";
+import UserHistory from "./routes/userAnalytics.routes.js";
 
+// ✅ Load env FIRST
+dotenv.config({ path: "./.env" });
 
+const app = express();
+
+// ✅ Allowed origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://demo.scriptindia.in:8021",
+  "https://eventphotos.scriptindia.in"
+];
+
+// ✅ Proper CORS Setup
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow server-to-server or Postman (no origin)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+// ✅ Handle preflight requests
+app.options("*", cors());
+
+// ✅ Body parsers (ONLY ONCE)
+app.use(express.json({ limit: "500mb" }));
+app.use(express.urlencoded({ extended: true, limit: "500mb" }));
+
+// ✅ Static files
+app.use(express.static("public"));
+
+// ✅ Connect DB
+checkDBConnection();
+
+// ✅ Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/event", eventRoutes);
-
-// app.use("/api/search", searchRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/email", SearchEmail);
 app.use("/api/history", UserHistory);
 
-// app.use("/api/google", googleupload);
+// ✅ Health check route (optional but useful)
+app.get("/", (req, res) => {
+  res.json({ message: "API is running..." });
+});
 
-
-app.use(express.json({ type: "*/*" }));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.listen(process.env.PORT,"0.0.0.0",(req,res)=>{
-    console.log(`welcome this line is working in http://localhost:${process.env.PORT}`)
+// ✅ Start server
+app.listen(process.env.PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${process.env.PORT}`);
 });
