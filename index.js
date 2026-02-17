@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 
 // ✅ Explicitly handle preflight
-app.options("*", cors());
+
 
 // ✅ Body parsers (ONLY ONCE)
 app.use(express.json({ limit: "500mb" }));
