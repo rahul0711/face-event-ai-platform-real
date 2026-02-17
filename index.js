@@ -16,23 +16,11 @@ dotenv.config({ path: "./.env" });
 const app = express();
 
 // ✅ CORS (IMPORTANT - do not overcomplicate this)
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
+app.use(cors({
+  origin: "https://eventphotos.scriptindia.in",
+  credentials: true
+}));
 
-  if (origin) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
 
 
 // ✅ Explicitly handle preflight
